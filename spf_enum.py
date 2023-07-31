@@ -51,7 +51,7 @@ def enumerate_includes(domain, included_networks=None, level=0):
     if not spf_record:
         return included_networks
     
-    print(f"{indent}[+] Fetching SPF record for: {domain} all: " + parse_all_modifier(spf_record)[0])
+    print(f"{indent}[+] Fetching SPF record for: {domain}, all: " + parse_all_modifier(spf_record)[0])
 
     networks = extract_networks_from_spf(spf_record)
     included_networks.update(networks)
