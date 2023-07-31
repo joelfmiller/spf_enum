@@ -46,11 +46,12 @@ def enumerate_includes(domain, included_networks=None, level=0):
         included_networks = set()
 
     indent = '  ' * level
-    print(f"{indent}[+] Fetching SPF record for: {domain}")
-
     spf_record = get_spf_record(domain)
+    
     if not spf_record:
         return included_networks
+    
+    print(f"{indent}[+] Fetching SPF record for: {domain} all: " + parse_all_modifier(spf_record)[0])
 
     networks = extract_networks_from_spf(spf_record)
     included_networks.update(networks)
@@ -71,17 +72,18 @@ def separate_ipv4_ipv6(networks):
     return ipv4_networks, ipv6_networks
 
 def parse_all_modifier(spf_record):
-    all_match = re.search(r'(?i)\b(?:\+|-|~|\?)?all\b', spf_record)
+    pattern = r"[-+?~]all$"
+    all_match = re.search(pattern, spf_record)
     if all_match:
         all_modifier = all_match.group()
         if all_modifier == '-all':
-            return "Fail", "The addresses not listed in the SPF record are not authorized to send emails and should be rejected."
+            return "-all", "Fails authentication. The server with matching IP address is not authorized to send for the domain. The SPF record doesn’t include the sending server IP address or domain so messages won’t pass authentication."
         elif all_modifier == '~all':
-            return "SoftFail", "The host is not believed to be authorized, however, the receiving software SHOULD NOT reject the message based solely on this result and MAY subject the message to closer scrutiny than normal."
+            return "~all", "Softfails authentication. It's unlikely that the server with matching IP address is authorized to send for the domain. The receiving server will typically accept the message but mark it as suspicious."
         elif all_modifier == '+all':
-            return "Note", "Any servers can send emails on your domain’s behalf. We highly recommend not to use this option."
+            return "+all", "Passes authentication. The server with matching IP address is authorized to send for your domain. Messages are authenticated. This is the default action when the mechanism doesn’t use a qualifier."
         elif all_modifier == '?all':
-            return "Note", "Interpreted as None / No policy. We highly recommend not to use this option."
+            return "?all", "Neutral. Neither passes nor fails authentication. The SPF record doesn’t explicitly state that the IP address is authorized to send for the domain. SPF records with neutral results often use ?all"
     return None, None
 
 def print_spf_record(domain, spf_record, level=0):
