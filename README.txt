@@ -1,3 +1,7 @@
+By: Joel Miller
+https://securitybyjoel.com
+https://twitter.com/joelfmiller
+
 Description:
 SPF enumerator written in Python
 
