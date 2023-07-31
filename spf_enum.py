@@ -55,8 +55,12 @@ def enumerate_includes(domain, included_networks=None, level=0):
     networks = extract_networks_from_spf(spf_record)
     included_networks.update(networks)
 
+    for network in networks:
+        print(f"{indent}  {network}")
+
     includes = re.findall(r'(?i)\binclude:(\S+)', spf_record)
     for include in includes:
+        #enumerate_includes(include, level + 1)
         included_networks.update(enumerate_includes(include, included_networks, level + 1))
 
     return included_networks
@@ -77,13 +81,13 @@ def main():
     included_networks = enumerate_includes(domain)
     ipv4_networks, ipv6_networks = separate_ipv4_ipv6(included_networks)
 
-    print("\nIPv4 Networks found in the SPF record:")
-    for network in ipv4_networks:
-        print(network)
+    #print("\nIPv4 Networks found in the SPF record:")
+    #for network in ipv4_networks:
+    #    print(network)
 
-    print("\nIPv6 Networks found in the SPF record:")
-    for network in ipv6_networks:
-        print(network)
+    #print("\nIPv6 Networks found in the SPF record:")
+    #for network in ipv6_networks:
+    #    print(network)
 
     total_hosts_ipv4 = sum(network.num_addresses for network in ipv4_networks)
     total_hosts_ipv6 = sum(network.num_addresses for network in ipv6_networks)
