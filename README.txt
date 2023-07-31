@@ -88,6 +88,9 @@ Example Output
     [-] 170.10.68.0/22
     [-] 158.120.80.0/21
 
+[+] SPF TXT Record for twitter.com:
+  v=spf1 ip4:199.16.156.0/22 ip4:199.59.148.0/22 ip4:8.25.194.0/23 ip4:8.25.196.0/23 ip4:204.92.114.203 ip4:204.92.114.204/31 include:_spf.google.com include:_thirdparty.twitter.com include:_oerp.twitter.com include:spf.smtp2go.com -all
+
 [+] Total number of IPv4 hosts: 343915
 [+] Total number of IPv6 hosts: 29710560942849126597578981376
 [+] Total number of hosts in the SPF record: 29710560942849126597579325291
