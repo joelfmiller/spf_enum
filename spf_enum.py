@@ -70,6 +70,40 @@ def separate_ipv4_ipv6(networks):
     ipv6_networks = [network for network in networks if isinstance(network, ipaddress.IPv6Network)]
     return ipv4_networks, ipv6_networks
 
+def parse_all_modifier(spf_record):
+    all_match = re.search(r'(?i)\b(?:\+|-|~|\?)?all\b', spf_record)
+    if all_match:
+        all_modifier = all_match.group()
+        if all_modifier == '-all':
+            return "Fail", "The addresses not listed in the SPF record are not authorized to send emails and should be rejected."
+        elif all_modifier == '~all':
+            return "SoftFail", "The host is not believed to be authorized, however, the receiving software SHOULD NOT reject the message based solely on this result and MAY subject the message to closer scrutiny than normal."
+        elif all_modifier == '+all':
+            return "Note", "Any servers can send emails on your domain’s behalf. We highly recommend not to use this option."
+        elif all_modifier == '?all':
+            return "Note", "Interpreted as None / No policy. We highly recommend not to use this option."
+    return None, None
+
+def print_spf_record(domain, spf_record, level=0):
+    if not spf_record:
+        return
+
+    indent = '  ' * level
+    print(f"{indent}[+] SPF TXT Record for {domain}:")
+    lines = spf_record.splitlines()
+    for line in lines:
+        print(f"{indent}  {line}")
+
+def print_tree(node, level=0):
+    indent = '  ' * level
+
+    # Print SPF record if available
+    if 'spf_txt' in node and node['spf_txt']:
+        print(f"{indent}\n[+] SPF TXT Record for {node['domain']}:")
+        lines = node['spf_txt'].splitlines()
+        for line in lines:
+            print(f"{indent}  {line}")
+
 def main():
     if len(sys.argv) > 1:
         # Use the domain provided as a command-line argument
@@ -78,20 +112,27 @@ def main():
         # Prompt for the domain name if no argument is provided
         domain = input("Enter the domain name: ")
 
+    spf_record = get_spf_record(domain)
     included_networks = enumerate_includes(domain)
     ipv4_networks, ipv6_networks = separate_ipv4_ipv6(included_networks)
 
-    #print("\nIPv4 Networks found in the SPF record:")
-    #for network in ipv4_networks:
-    #    print(network)
+    all_modifier_type, all_modifier_note = parse_all_modifier(spf_record)
 
-    #print("\nIPv6 Networks found in the SPF record:")
-    #for network in ipv6_networks:
-    #    print(network)
+    tree = {
+        'domain': domain,
+        'spf_txt': spf_record,  # Store the SPF record string separately
+        'total_hosts': 0,  # Placeholder for the total hosts
+        'networks': included_networks,
+        'includes': []
+    }
 
+    # Calculate the total hosts and store it under 'total_hosts' key
     total_hosts_ipv4 = sum(network.num_addresses for network in ipv4_networks)
     total_hosts_ipv6 = sum(network.num_addresses for network in ipv6_networks)
     total_hosts = total_hosts_ipv4 + total_hosts_ipv6
+    tree['total_hosts'] = total_hosts
+
+    print_tree(tree)
 
     print(f"\n[+] Total number of IPv4 hosts: {total_hosts_ipv4}")
     print(f"[+] Total number of IPv6 hosts: {total_hosts_ipv6}")
