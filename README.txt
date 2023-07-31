@@ -1,3 +1,12 @@
+Description:
+SPF enumerator written in Python
+
+Script retrieves the SPF record for a given domain and enumerates all IPs and includes to print out
+a comprehensive list of IPv4 and IPv6 records.
+
+Requires dnspython to be installed
+i.e. pip install dnspython
+
 Usage:
 python spf_enum.py <domain>
 i.e. python spf_enum.py twitter.com
