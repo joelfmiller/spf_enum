@@ -16,15 +16,15 @@ i.e. python spf_enum.py twitter.com
 
 Example Output
 ------------------------------------------
-[+] Fetching SPF record for: twitter.com
+[+] Fetching SPF record for: twitter.com all: -all
   [-] 199.16.156.0/22
   [-] 199.59.148.0/22
   [-] 8.25.194.0/23
   [-] 8.25.196.0/23
   [-] 204.92.114.203/32
   [-] 204.92.114.204/31
-  [+] Fetching SPF record for: _spf.google.com
-    [+] Fetching SPF record for: _netblocks.google.com
+  [+] Fetching SPF record for: _spf.google.com all: ~all
+    [+] Fetching SPF record for: _netblocks.google.com all: ~all
       [-] 35.190.247.0/24
       [-] 64.233.160.0/19
       [-] 66.102.0.0/20
@@ -36,14 +36,14 @@ Example Output
       [-] 209.85.128.0/17
       [-] 216.58.192.0/19
       [-] 216.239.32.0/19
-    [+] Fetching SPF record for: _netblocks2.google.com
+    [+] Fetching SPF record for: _netblocks2.google.com all: ~all
       [-] 2001:4860:4000::/36
       [-] 2404:6800:4000::/36
       [-] 2607:f8b0:4000::/36
       [-] 2800:3f0:4000::/36
       [-] 2a00:1450:4000::/36
       [-] 2c0f:fb50:4000::/36
-    [+] Fetching SPF record for: _netblocks3.google.com
+    [+] Fetching SPF record for: _netblocks3.google.com all: ~all
       [-] 172.217.0.0/19
       [-] 172.217.32.0/20
       [-] 172.217.128.0/19
@@ -54,13 +54,13 @@ Example Output
       [-] 108.177.96.0/19
       [-] 35.191.0.0/16
       [-] 130.211.0.0/22
-  [+] Fetching SPF record for: _thirdparty.twitter.com
+  [+] Fetching SPF record for: _thirdparty.twitter.com all: -all
     [-] 96.43.144.64/31
     [-] 96.43.148.64/31
     [-] 182.50.78.64/28
     [-] 204.14.232.64/28
     [-] 204.14.234.64/28
-    [+] Fetching SPF record for: spf.mandrillapp.com
+    [+] Fetching SPF record for: spf.mandrillapp.com all: ~all
       [-] 198.2.128.0/24
       [-] 198.2.132.0/22
       [-] 198.2.136.0/23
@@ -73,12 +73,12 @@ Example Output
       [-] 198.2.177.0/24
       [-] 198.2.178.0/23
       [-] 198.2.180.0/24
-  [+] Fetching SPF record for: _oerp.twitter.com
+  [+] Fetching SPF record for: _oerp.twitter.com all: -all
     [-] 144.34.32.247/32
     [-] 144.34.33.247/32
     [-] 144.34.8.247/32
     [-] 144.34.9.247/32
-  [+] Fetching SPF record for: spf.smtp2go.com
+  [+] Fetching SPF record for: spf.smtp2go.com all: ~all
     [-] 207.58.147.64/28
     [-] 216.22.15.224/27
     [-] 43.228.184.0/22
