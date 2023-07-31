@@ -1,6 +1,7 @@
 import dns.resolver
 import re
 import ipaddress
+import sys
 
 def get_spf_record(domain):
     try:
@@ -66,7 +67,13 @@ def separate_ipv4_ipv6(networks):
     return ipv4_networks, ipv6_networks
 
 def main():
-    domain = input("Enter the domain name: ")
+    if len(sys.argv) > 1:
+        # Use the domain provided as a command-line argument
+        domain = sys.argv[1]
+    else:
+        # Prompt for the domain name if no argument is provided
+        domain = input("Enter the domain name: ")
+
     included_networks = enumerate_includes(domain)
     ipv4_networks, ipv6_networks = separate_ipv4_ipv6(included_networks)
 
