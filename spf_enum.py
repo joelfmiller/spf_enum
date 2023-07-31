@@ -46,7 +46,7 @@ def enumerate_includes(domain, included_networks=None, level=0):
         included_networks = set()
 
     indent = '  ' * level
-    print(f"{indent}Fetching SPF record for: {domain}")
+    print(f"{indent}[+] Fetching SPF record for: {domain}")
 
     spf_record = get_spf_record(domain)
     if not spf_record:
@@ -56,7 +56,7 @@ def enumerate_includes(domain, included_networks=None, level=0):
     included_networks.update(networks)
 
     for network in networks:
-        print(f"{indent}  {network}")
+        print(f"{indent}  [-] {network}")
 
     includes = re.findall(r'(?i)\binclude:(\S+)', spf_record)
     for include in includes:
@@ -93,9 +93,9 @@ def main():
     total_hosts_ipv6 = sum(network.num_addresses for network in ipv6_networks)
     total_hosts = total_hosts_ipv4 + total_hosts_ipv6
 
-    print(f"\nTotal number of IPv4 hosts: {total_hosts_ipv4}")
-    print(f"Total number of IPv6 hosts: {total_hosts_ipv6}")
-    print(f"Total number of hosts in the SPF record: {total_hosts}")
+    print(f"\n[+] Total number of IPv4 hosts: {total_hosts_ipv4}")
+    print(f"[+] Total number of IPv6 hosts: {total_hosts_ipv6}")
+    print(f"[+] Total number of hosts in the SPF record: {total_hosts}")
 
 if __name__ == "__main__":
     main()
