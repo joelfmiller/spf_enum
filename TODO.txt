@@ -3,4 +3,4 @@ TODO:
 - Include options to store and compare changes between lookups, store results in cloud storage/db
 - Analyze SPF/DMARC
 - provide suggestions based on best practices
-- ...
+- compare two domains for differences/similarities
