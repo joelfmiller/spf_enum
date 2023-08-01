@@ -15,10 +15,9 @@ def get_spf_record(domain):
         answers = dns.resolver.resolve(domain, 'TXT')
         for rdata in answers:
             data = rdata.strings
-            for record in data:
-                record_str = record.decode('utf-8')
-                if record_str.startswith('v=spf1'):
-                    return record_str.strip('"')
+            record_str = ''.join(record.decode('utf-8') for record in data)
+            if record_str.startswith('v=spf1'):
+                return record_str.strip('"')
     except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
         pass
 
