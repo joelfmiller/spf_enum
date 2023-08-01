@@ -51,7 +51,7 @@ def enumerate_includes(domain, included_networks=None, level=0):
     if not spf_record:
         return included_networks
     
-    print(f"{indent}[+] Fetching SPF record for: {domain}, all: " + parse_all_modifier(spf_record)[0])
+    print(f"{indent}[+] Fetching SPF record for: {domain} all: " + parse_all_modifier(spf_record)[0])
 
     networks = extract_networks_from_spf(spf_record)
     included_networks.update(networks)
@@ -77,14 +77,14 @@ def parse_all_modifier(spf_record):
     if all_match:
         all_modifier = all_match.group()
         if all_modifier == '-all':
-            return "-all", "Fails authentication. The server with matching IP address is not authorized to send for the domain. The SPF record doesn’t include the sending server IP address or domain so messages won’t pass authentication."
+            return "-all", "Fails authentication. The SPF record doesn’t include the sending server IP address or domain so messages won’t pass authentication."
         elif all_modifier == '~all':
-            return "~all", "Softfails authentication. It's unlikely that the server with matching IP address is authorized to send for the domain. The receiving server will typically accept the message but mark it as suspicious."
+            return "~all", "Softfails authentication. It's unlikely that the server with matching IP address is authorized to send for the domain; the message will typically be accepted but marked as suspicious."
         elif all_modifier == '+all':
             return "+all", "Passes authentication. The server with matching IP address is authorized to send for your domain. Messages are authenticated. This is the default action when the mechanism doesn’t use a qualifier."
         elif all_modifier == '?all':
             return "?all", "Neutral. Neither passes nor fails authentication. The SPF record doesn’t explicitly state that the IP address is authorized to send for the domain. SPF records with neutral results often use ?all"
-    return None, None
+    return "", ""
 
 def print_spf_record(domain, spf_record, level=0):
     if not spf_record:
@@ -104,7 +104,7 @@ def print_tree(node, level=0):
         print(f"{indent}\n[+] SPF TXT Record for {node['domain']}:")
         lines = node['spf_txt'].splitlines()
         for line in lines:
-            print(f"{indent}  {line}")
+            print(f"{indent}  [-] {line}")
 
 def main():
     if len(sys.argv) > 1:
