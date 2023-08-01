@@ -11,7 +11,7 @@ i.e. pip install dnspython
 
 Usage:
 python spf_enum.py <domain>
-i.e. python spf_enum.py twitter.com
+i.e. python spf_enum.py x.com
 
 Example Output
 ------------------------------------------
@@ -37,6 +37,9 @@ Example Output
       [-] 2a00:1450:4000::/36
       [-] 2c0f:fb50:4000::/36
     [+] Fetching SPF record for: _netblocks3.google.com all: ~all
+      [-] 35.191.0.0/16
+      [-] 108.177.96.0/19
+      [-] 130.211.0.0/22
       [-] 172.217.0.0/19
       [-] 172.217.32.0/20
       [-] 172.217.128.0/19
@@ -44,9 +47,6 @@ Example Output
       [-] 172.217.192.0/19
       [-] 172.253.56.0/21
       [-] 172.253.112.0/20
-      [-] 108.177.96.0/19
-      [-] 35.191.0.0/16
-      [-] 130.211.0.0/22
 
 [+] SPF TXT Record for x.com:
   [-] v=spf1 include:_spf.google.com -all
