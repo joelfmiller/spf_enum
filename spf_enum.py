@@ -2,6 +2,7 @@ import dns.resolver
 import re
 import ipaddress
 import sys
+import socket
 
 def get_spf_record(domain):
     try:
@@ -50,17 +51,28 @@ def enumerate_includes(domain, included_networks=None, level=0):
     if not spf_record:
         return included_networks
     
-    print(f"{indent}[+] Fetching SPF record for: {domain} all: " + parse_all_modifier(spf_record)[0])
+    all_modifier = parse_all_modifier(spf_record)[0]
+    print(f"{indent}[+] Fetching SPF record for: {domain} all: {all_modifier}")
 
     networks = extract_networks_from_spf(spf_record)
     included_networks.update(networks)
 
-    for network in networks:
+    # Separate IPv4 and IPv6 networks
+    ipv4_networks = [network for network in networks if isinstance(network, ipaddress.IPv4Network)]
+    ipv6_networks = [network for network in networks if isinstance(network, ipaddress.IPv6Network)]
+
+    # Sort the IPv4 and IPv6 networks separately
+    sorted_ipv4_networks = sorted(ipv4_networks)
+    sorted_ipv6_networks = sorted(ipv6_networks)
+
+    # Combine the sorted lists before printing
+    sorted_networks = sorted_ipv4_networks + sorted_ipv6_networks
+
+    for network in sorted_networks:
         print(f"{indent}  [-] {network}")
 
     includes = re.findall(r'(?i)\binclude:(\S+)', spf_record)
     for include in includes:
-        #enumerate_includes(include, level + 1)
         included_networks.update(enumerate_includes(include, included_networks, level + 1))
 
     return included_networks
@@ -83,7 +95,7 @@ def parse_all_modifier(spf_record):
             return "+all", "Passes authentication. The server with matching IP address is authorized to send for your domain. Messages are authenticated. This is the default action when the mechanism doesn’t use a qualifier."
         elif all_modifier == '?all':
             return "?all", "Neutral. Neither passes nor fails authentication. The SPF record doesn’t explicitly state that the IP address is authorized to send for the domain. SPF records with neutral results often use ?all"
-    return "", ""
+    return None, None
 
 def print_spf_record(domain, spf_record, level=0):
     if not spf_record:
