@@ -4,3 +4,5 @@ TODO:
 - Analyze SPF/DMARC
 - provide suggestions based on best practices
 - compare two domains for differences/similarities
+
+- test for a record or mx record inclusion
