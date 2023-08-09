@@ -71,7 +71,7 @@ def enumerate_includes(domain, included_networks=None, level=0):
     for network in sorted_networks:
         print(f"{indent}  [-] {network}")
 
-    includes = re.findall(r'(?i)\binclude:(\S+)', spf_record)
+    includes = re.findall(r'(?i)\b(?:include|redirect)[:=](\S+)', spf_record)
     for include in includes:
         included_networks.update(enumerate_includes(include, included_networks, level + 1))
 
